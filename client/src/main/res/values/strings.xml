@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">nti-test-chrome_scaner</string>
+    <string name="port_is_invalid">port is invalid</string>
+    <string name="ip_address_is_invalid">IP address is invalid</string>
+    <string name="port">Port</string>
+    <string name="ip_address">IP address</string>
+    <string name="edit_server_configuration">Edit server configuration</string>
+    <string name="save">Save</string>
 </resources>

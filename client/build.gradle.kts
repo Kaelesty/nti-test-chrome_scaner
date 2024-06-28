@@ -1,6 +1,11 @@
 plugins {
 	alias(libs.plugins.android.application)
 	alias(libs.plugins.jetbrains.kotlin.android)
+	alias(libs.plugins.google.devtools.ksp)
+	alias(libs.plugins.jetbrains.kotlin.compose)
+	alias(libs.plugins.google.hilt)
+
+	kotlin("plugin.serialization") version "2.0.0"
 }
 
 android {
@@ -66,4 +71,15 @@ dependencies {
 	androidTestImplementation(libs.androidx.ui.test.junit4)
 	debugImplementation(libs.androidx.ui.tooling)
 	debugImplementation(libs.androidx.ui.test.manifest)
+
+	implementation(libs.kotlinx.serialization)
+
+	implementation(libs.hilt.android)
+	ksp(libs.hilt.compiler)
+	implementation(libs.androidx.hilt.navigation.compose)
+
+	implementation(libs.androidx.datastore.preferences)
+
+	implementation(libs.androidx.lifecycle.viewmodel.ktx)
+	implementation(libs.androidx.lifecycle.viewmodel.compose)
 }
