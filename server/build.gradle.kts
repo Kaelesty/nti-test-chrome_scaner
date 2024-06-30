@@ -2,7 +2,12 @@ plugins {
 	alias(libs.plugins.android.application)
 	alias(libs.plugins.jetbrains.kotlin.android)
 	alias(libs.plugins.jetbrains.kotlin.compose)
+	alias(libs.plugins.google.devtools.ksp)
+	alias(libs.plugins.google.hilt)
+
+	kotlin("plugin.serialization") version "2.0.0"
 }
+
 
 android {
 	namespace = "com.kaelesty.server"
@@ -10,7 +15,7 @@ android {
 
 	defaultConfig {
 		applicationId = "com.kaelesty.server"
-		minSdk = 24
+		minSdk = 26
 		targetSdk = 34
 		versionCode = 1
 		versionName = "1.0"
@@ -67,4 +72,14 @@ dependencies {
 	androidTestImplementation(libs.androidx.ui.test.junit4)
 	debugImplementation(libs.androidx.ui.tooling)
 	debugImplementation(libs.androidx.ui.test.manifest)
+
+	implementation(libs.ktor.client.core)
+	implementation(libs.ktor.client.cio)
+	implementation(libs.ktor.client.websockets)
+	implementation(libs.ktor.ktor.client.logging)
+
+	implementation(libs.hilt.android)
+	ksp(libs.hilt.compiler)
+
+	implementation(libs.kotlinx.serialization)
 }
