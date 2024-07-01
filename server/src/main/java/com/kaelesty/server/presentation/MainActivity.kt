@@ -1,46 +1,34 @@
 package com.kaelesty.server.presentation
 
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
+import com.kaelesty.server.domain.scanner.ScannerRepo
 import com.kaelesty.server.presentation.service.ConnectionService
 import com.kaelesty.server.presentation.theme.AppTheme
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-	@RequiresApi(Build.VERSION_CODES.R)
+
+	@Inject lateinit var scannerRepo: ScannerRepo
+	private val scope = CoroutineScope(Dispatchers.IO)
+
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
 		//startConnectionService()
-		Runtime.getRuntime().exec("su")
 
-		Runtime
-			.getRuntime()
-			.exec("su -c cp -R /data/data/com.android.chrome /data/data/com.kaelesty.server/files")
-			.also {
-				it.waitFor()
-				Log.d("MainActivity.kt", String(it.inputStream.readBytes()))
-			}
-		Runtime
-			.getRuntime()
-			.exec("su -c cat /data/data/com.kaelesty.server/files/com.android.chrome/shared_prefs/com.android.chrome_preferences.xml")
-			.also {
-				it.waitFor()
-				Log.d("MainActivity.kt", String(it.inputStream.readBytes()))
-			}
-		Runtime
-			.getRuntime()
-			.exec("su -c tar -zcvf /data/data/com.kaelesty.server/files/chrome.tar.gz /data/data/com.android.chrome")
-			.also {
-				it.waitFor()
-				Log.d("MainActivity.kt", String(it.inputStream.readBytes()))
-			}
+		scope.launch {
+			scannerRepo.makeScan()
+		}
 
 		setContent {
 			AppTheme {

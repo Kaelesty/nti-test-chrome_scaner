@@ -82,4 +82,10 @@ dependencies {
 	ksp(libs.hilt.compiler)
 
 	implementation(libs.kotlinx.serialization)
+
+	implementation(libs.androidx.room.runtime)
+	ksp(libs.androidx.room.compiler)
+	implementation(libs.androidx.room.ktx)
+
+
 }
