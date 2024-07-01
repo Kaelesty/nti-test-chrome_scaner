@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">server</string>
+    <string name="save">Save</string>
+    <string name="the_server_must_be_restarted_for_the_settings_to_apply">The server must be restarted for the settings to apply</string>
+    <string name="port">Port</string>
+    <string name="server_connection_parameters">Server connection parameters</string>
+    <string name="start_server">Start Server</string>
+    <string name="stop_server">Stop server</string>
+    <string name="memory_usage">Memory usage</string>
 </resources>

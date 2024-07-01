@@ -1,6 +1,8 @@
 package com.kaelesty.server.di
 
+import com.kaelesty.server.data.connection.ConnectionRepoImpl
 import com.kaelesty.server.data.scanner.ScannerRepoImpl
+import com.kaelesty.server.domain.connection.ConnectionRepo
 import com.kaelesty.server.domain.scanner.ScannerRepo
 import dagger.Binds
 import dagger.Module
@@ -13,4 +15,7 @@ interface ReposModule {
 
 	@Binds
 	fun bindScanRepo(impl: ScannerRepoImpl): ScannerRepo
+
+	@Binds
+	fun bindConnectionRepo(impl: ConnectionRepoImpl): ConnectionRepo
 }

@@ -1,42 +1,45 @@
 package com.kaelesty.server.presentation
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.datastore.preferences.preferencesDataStore
+import com.kaelesty.server.data.scanner.FilesTool
+import com.kaelesty.server.domain.scanner.Scan
 import com.kaelesty.server.domain.scanner.ScannerRepo
 import com.kaelesty.server.presentation.service.ConnectionService
 import com.kaelesty.server.presentation.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+val Context.dataStore by preferencesDataStore(
+	name = "preferences"
+)
 
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-	@Inject lateinit var scannerRepo: ScannerRepo
-	private val scope = CoroutineScope(Dispatchers.IO)
-
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
-		//startConnectionService()
-
-		scope.launch {
-			scannerRepo.makeScan()
-		}
+		startConnectionService()
 
 		setContent {
 			AppTheme {
-				Column {
-					Text(text = "Max Memory: ${Runtime.getRuntime().maxMemory()}")
-					Text(text = "Total Memory: ${Runtime.getRuntime().totalMemory()}")
-					Text(text = "Free Memory: ${Runtime.getRuntime().freeMemory()}")
-				}
+				MainContent()
 			}
 		}
 	}

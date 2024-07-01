@@ -80,12 +80,14 @@ dependencies {
 
 	implementation(libs.hilt.android)
 	ksp(libs.hilt.compiler)
+	implementation(libs.androidx.hilt.navigation.compose)
 
 	implementation(libs.kotlinx.serialization)
+	implementation(libs.kotlinx.serialization.json.v163)
 
 	implementation(libs.androidx.room.runtime)
 	ksp(libs.androidx.room.compiler)
 	implementation(libs.androidx.room.ktx)
 
-
+	implementation(libs.androidx.datastore.preferences)
 }

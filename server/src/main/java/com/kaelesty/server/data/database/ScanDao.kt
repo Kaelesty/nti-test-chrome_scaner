@@ -12,7 +12,7 @@ interface ScanDao {
 	suspend fun saveScan(scanDbModel: ScanDbModel)
 
 	@Query("SELECT * FROM scans")
-	fun getScans(): Flow<ScanDbModel>
+	fun getScans(): Flow<List<ScanDbModel>>
 
 	@Query("SELECT * FROM scans WHERE id = :scanId")
 	fun getScanById(scanId: Int): ScanDbModel

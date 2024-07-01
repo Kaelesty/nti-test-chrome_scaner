@@ -1,8 +1,8 @@
 package com.kaelesty.server.data.scanner
 
-import android.util.Log
 import com.kaelesty.server.data.database.ScanDao
 import com.kaelesty.server.data.database.ScanDbModel
+import com.kaelesty.server.data.logs.LogsTool
 import com.kaelesty.server.domain.scanner.Scan
 import com.kaelesty.server.domain.scanner.ScannerRepo
 import kotlinx.coroutines.flow.Flow
@@ -10,19 +10,23 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class ScannerRepoImpl @Inject constructor(
-	private val scanDao: ScanDao
+	private val scanDao: ScanDao,
 ): ScannerRepo {
 
 	override suspend fun makeScan() {
+		LogsTool.log("Scanning started...")
 		val lastScan = scanDao.getLastScan()?.let {
 			ScanTool.getScanFromDbModel(it)
 		}
 		val scan = ScanTool.makeScan(lastScan)
-		if (lastScan == null || ! ScanTool.equals(scan, lastScan)) {
-			val metaFilePath = FileSystemTool.saveScan(
+		val equals = lastScan?.let { ScanTool.equals(scan, it) } ?: false
+		LogsTool.log("Scanning completed")
+		if (lastScan == null || ! equals) {
+
+			val metaFilePath = FilesTool.saveScan(
 				scan
 			)
-			val fileSystemArchivePath = FileSystemTool.saveFileSystem(
+			val fileSystemArchivePath = FilesTool.saveFileSystem(
 				scan.id
 			)
 			scanDao.saveScan(
@@ -31,18 +35,24 @@ class ScannerRepoImpl @Inject constructor(
 					fileSystemArchivePath, metaFilePath
 				)
 			)
+			LogsTool.log("New scan saved with id ${scan.id}")
 		}
-		Log.d("MainActivity.kt", "Scan is finished")
+		else {
+			LogsTool.log("No changes detected. Scan results will be dropped")
+		}
 	}
 
-	override fun getScans(): Flow<Scan> {
+	override fun getScans(): Flow<List<Scan>> {
 		return scanDao.getScans().map {
-			FileSystemTool.getScan(it.metaFilePath)
+			it.map {
+				FilesTool.getScan(it.metaFilePath)
+			}
 		}
 	}
 
 	override suspend fun restoreFileSystemByScan(scanId: Int) {
 		val archivePath = scanDao.getScanById(scanId).archiveFilePath
-		FileSystemTool.restoreFileSystem(archivePath)
+		FilesTool.restoreFileSystem(archivePath)
+		LogsTool.log("File system restored by scan with id $scanId")
 	}
 }

@@ -2,13 +2,15 @@ package com.kaelesty.server.data.scanner
 
 import com.kaelesty.server.data.database.ScanDbModel
 import com.kaelesty.server.domain.scanner.Scan
+import kotlinx.serialization.json.Json
+import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 object ScanTool {
 
-	const val CHROME_DIR = FileSystemTool.CHROME_DIR
-	const val HOME_DIR = FileSystemTool.HOME_DIR
+	const val CHROME_DIR = FilesTool.CHROME_DIR
+	const val HOME_DIR = FilesTool.HOME_DIR
 
 	fun makeScan(lastScan: Scan?): Scan {
 		val scan = Scan(
@@ -51,11 +53,12 @@ object ScanTool {
 	}
 
 	fun getScanFromDbModel(dbModel: ScanDbModel): Scan {
-		TODO()
+		val scanJson = File(dbModel.metaFilePath).bufferedReader().readLines()[0]
+		return Json.decodeFromString<Scan>(scanJson)
 	}
 
 	fun equals(scan1: Scan, scan2: Scan): Boolean {
-		return scan1 == scan2
+		return scan1.root == scan2.root
 	}
 
 	private fun convertLsOutputToNode(

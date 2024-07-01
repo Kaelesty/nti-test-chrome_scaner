@@ -6,7 +6,7 @@ interface ScannerRepo {
 
 	suspend fun makeScan()
 
-	fun getScans(): Flow<Scan>
+	fun getScans(): Flow<List<Scan>>
 
 	suspend fun restoreFileSystemByScan(scanId: Int)
 }
