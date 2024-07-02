@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.kaelesty.nti_test_chrome_scaner.presentation.config.ConfigContent
+import com.kaelesty.nti_test_chrome_scaner.presentation.memoryusage.MemoryUsageCard
 import com.kaelesty.nti_test_chrome_scaner.presentation.navigation.NavGraph
 import com.kaelesty.nti_test_chrome_scaner.presentation.navigation.Screen
 import com.kaelesty.nti_test_chrome_scaner.presentation.navigation.rememberMusicNavigationState

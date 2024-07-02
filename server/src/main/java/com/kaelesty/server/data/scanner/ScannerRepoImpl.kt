@@ -3,7 +3,6 @@ package com.kaelesty.server.data.scanner
 import com.kaelesty.server.data.database.ScanDao
 import com.kaelesty.server.data.database.ScanDbModel
 import com.kaelesty.server.data.logs.LogsTool
-import com.kaelesty.server.domain.scanner.Scan
 import com.kaelesty.server.domain.scanner.ScannerRepo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -42,7 +41,7 @@ class ScannerRepoImpl @Inject constructor(
 		}
 	}
 
-	override fun getScans(): Flow<List<Scan>> {
+	override fun getScans(): Flow<List<com.kaelesty.shared.domain.Scan>> {
 		return scanDao.getScans().map {
 			it.map {
 				FilesTool.getScan(it.metaFilePath)

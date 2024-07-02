@@ -11,17 +11,24 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.kaelesty.nti_test_chrome_scaner.R
+import com.kaelesty.nti_test_chrome_scaner.domain.client.Client
 import com.kaelesty.nti_test_chrome_scaner.presentation.WebSocketClient
+import com.kaelesty.shared.domain.ServerAction
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ClientService : Service() {
 
-	private val webSocketClient = WebSocketClient("ws://192.168.3.2:8080/actions")
+	@Inject lateinit var webSocketClient: WebSocketClient
+	@Inject lateinit var client: Client
+
 
 	private val scope = CoroutineScope(Dispatchers.IO)
 
@@ -32,13 +39,20 @@ class ClientService : Service() {
 	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 		scope.launch {
 			webSocketClient.connect()
-			Log.d("MainService", "Connected")
 		}
 		scope.launch {
-			delay(5000)
-			for (i in 0..10) {
-				webSocketClient.send("Action $i")
-				Log.d("MainService", "$i sent")
+			webSocketClient.listen {
+				Log.d("ClientService", "ServerAction received")
+				client.handleServerAction(
+					Json.decodeFromString<ServerAction>(it)
+				)
+			}
+		}
+		scope.launch {
+			client.actionsToExecute.collect {
+				webSocketClient.send(
+					Json.encodeToString(it)
+				)
 			}
 		}
 		startForeground(5002, getNotification("Chrome Scanner Client", "..."))

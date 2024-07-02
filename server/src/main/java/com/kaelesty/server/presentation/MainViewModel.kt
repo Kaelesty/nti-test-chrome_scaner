@@ -4,7 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kaelesty.server.data.logs.LogsTool
 import com.kaelesty.server.domain.connection.ConnectionRepo
+import com.kaelesty.server.domain.connection.Server
 import com.kaelesty.server.domain.scanner.ScannerRepo
+import com.kaelesty.shared.domain.MemoryUsage
+import com.kaelesty.shared.domain.ServerAction
+import com.kaelesty.shared.domain.bytesToMb
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -17,9 +21,10 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
 	private val scannerRepo: ScannerRepo,
 	private val connectionRepo: ConnectionRepo,
+	private val server: Server,
 ): ViewModel() {
 
-	val MEMORY_USAGE_OBSERVATION_DELAY_MILLIS = 100L
+	val MEMORY_USAGE_OBSERVATION_DELAY_MILLIS = 10000L // TODO set to 100
 
 	data class State(
 		val port: String = "",
@@ -28,12 +33,7 @@ class MainViewModel @Inject constructor(
 		val isServerStarted: Boolean = false,
 		val memoryUsage: MemoryUsage = MemoryUsage(),
 		val logs: List<String> = listOf(),
-	) {
-		data class MemoryUsage(
-			val usedMemory: Float = 0f,
-			val availableMemory: Float = 0f
-		)
-	}
+	)
 
 	private val _state = MutableStateFlow(State())
 	val state: StateFlow<State> get() = _state
@@ -100,14 +100,21 @@ class MainViewModel @Inject constructor(
 		viewModelScope.launch(Dispatchers.Default) {
 			val runtime = Runtime.getRuntime()
 			while (true) {
+				val memoryUsage = MemoryUsage(
+					usedMemory = (runtime.totalMemory() - runtime.freeMemory())
+					,
+					availableMemory = runtime.totalMemory()
+				)
+
+				server.executeAction(
+					ServerAction.UpdateMemoryUsage(
+						memoryUsage
+					)
+				)
+
 				_state.emit(
 					_state.value.copy(
-						memoryUsage = State.MemoryUsage(
-							usedMemory = (runtime.totalMemory() - runtime.freeMemory())
-								.bytesToMb()
-							,
-							availableMemory = runtime.totalMemory().bytesToMb()
-						)
+						memoryUsage = memoryUsage
 					)
 				)
 				delay(MEMORY_USAGE_OBSERVATION_DELAY_MILLIS)
@@ -126,8 +133,4 @@ class MainViewModel @Inject constructor(
 			}
 		}
 	}
-}
-
-fun Long.bytesToMb(): Float {
-	return this.toFloat() / 1024 / 1024
 }

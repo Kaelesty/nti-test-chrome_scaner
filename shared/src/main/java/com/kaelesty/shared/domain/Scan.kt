@@ -1,4 +1,4 @@
-package com.kaelesty.server.domain.scanner
+package com.kaelesty.shared.domain
 
 import kotlinx.serialization.Serializable
 

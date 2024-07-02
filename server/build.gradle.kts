@@ -6,8 +6,6 @@ plugins {
 	alias(libs.plugins.google.hilt)
 
 	kotlin("plugin.serialization") version "2.0.0"
-
-	//id("io.ktor.plugin") version "2.3.12"
 }
 
 
@@ -86,7 +84,6 @@ dependencies {
 	implementation(libs.androidx.hilt.navigation.compose)
 
 	implementation(libs.kotlinx.serialization)
-	implementation(libs.kotlinx.serialization.json.v163)
 
 	implementation(libs.androidx.room.runtime)
 	ksp(libs.androidx.room.compiler)
@@ -95,4 +92,6 @@ dependencies {
 	implementation(libs.androidx.datastore.preferences)
 
 	implementation(libs.java.websocket)
+
+	implementation(project(":shared"))
 }

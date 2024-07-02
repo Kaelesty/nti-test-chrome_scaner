@@ -22,3 +22,4 @@ dependencyResolutionManagement {
 rootProject.name = "nti-test-chrome_scaner"
 include(":client")
 include(":server")
+include(":shared")

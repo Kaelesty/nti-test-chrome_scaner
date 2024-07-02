@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kaelesty.nti_test_chrome_scaner.R
+import com.kaelesty.nti_test_chrome_scaner.presentation.memoryusage.MemoryUsageCard
 
 @Composable
 fun ConfigContent() {
@@ -29,6 +30,17 @@ fun ConfigContent() {
 	val viewModel = hiltViewModel<ConfigViewModel>()
 	val state by viewModel.state.collectAsState()
 
+	Column {
+		ConnectionParamsCard(state, viewModel)
+		MemoryUsageCard()
+	}
+}
+
+@Composable
+private fun ConnectionParamsCard(
+	state: ConfigViewModel.State,
+	viewModel: ConfigViewModel
+) {
 	Card(
 		modifier = Modifier
 			.padding(16.dp)
@@ -54,9 +66,12 @@ fun ConfigContent() {
 
 			// port
 			TextField(
-				value = state.editableServerConfig.port, onValueChange = { viewModel.changePort(it) },
-				supportingText = { Text("Port") }, isError = state.isPortInvalid,
-				modifier = Modifier.fillMaxWidth(), singleLine = true,
+				value = state.editableServerConfig.port,
+				onValueChange = { viewModel.changePort(it) },
+				supportingText = { Text("Port") },
+				isError = state.isPortInvalid,
+				modifier = Modifier.fillMaxWidth(),
+				singleLine = true,
 				leadingIcon = {
 					if (state.currentServerConfig.port == state.editableServerConfig.port) {
 						Icon(Icons.Default.Done, contentDescription = null)

@@ -1,6 +1,6 @@
 package com.kaelesty.server.data.scanner
 
-import com.kaelesty.server.domain.scanner.Scan
+import com.kaelesty.shared.domain.Scan
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
@@ -26,16 +26,16 @@ object FilesTool {
 		ExecTool.exec("su -c rm -rf /data/data/com.android.chrome")
 	}
 
-	fun saveScan(scan: Scan): String {
+	fun saveScan(scan: com.kaelesty.shared.domain.Scan): String {
 		val scanJson = Json.encodeToString(scan)
 		return "$HOME_DIR/files/scan_meta_${scan.id}.json".also {
 			File(it).writeText(scanJson)
 		}
 	}
 
-	suspend fun getScan(path: String): Scan {
+	suspend fun getScan(path: String): com.kaelesty.shared.domain.Scan {
 		val scanJson = File(path).bufferedReader().readText()
-		return Json.decodeFromString<Scan>(scanJson)
+		return Json.decodeFromString<com.kaelesty.shared.domain.Scan>(scanJson)
 	}
 
 

@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kaelesty.server.R
+import com.kaelesty.shared.domain.bytesToMb
 
 @Composable
 fun MainContent() {
@@ -76,10 +77,14 @@ private fun MemoryUsageCard(state: MainViewModel.State) {
 			Text(stringResource(R.string.memory_usage), fontSize = 24.sp)
 			Spacer(modifier = Modifier.height(12.dp))
 			Text(text = "Used memory")
-			Text(text = "${"%.2f".format(state.memoryUsage.usedMemory)} MB", fontSize = 20.sp)
+			Text(text = "${
+				"%.2f".format(state.memoryUsage.usedMemory.bytesToMb())
+			} MB", fontSize = 20.sp)
 			Spacer(modifier = Modifier.height(6.dp))
 			Text(text = "Available memory")
-			Text(text = "${"%.2f".format(state.memoryUsage.availableMemory)} MB", fontSize = 20.sp)
+			Text(text = "${
+				"%.2f".format(state.memoryUsage.availableMemory.bytesToMb())
+			} MB", fontSize = 20.sp)
 		}
 	}
 }

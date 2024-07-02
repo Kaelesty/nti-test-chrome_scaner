@@ -1,5 +1,6 @@
 package com.kaelesty.server.domain.scanner
 
+import com.kaelesty.shared.domain.Scan
 import kotlinx.coroutines.flow.Flow
 
 interface ScannerRepo {

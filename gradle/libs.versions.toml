@@ -9,6 +9,7 @@ coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
+kotlinxCoroutinesCore = "1.9.0-RC"
 kotlinxSerializationJson = "1.6.3"
 ktorBom = "2.3.12"
 ktorClientCio = "2.3.7"
@@ -28,6 +29,7 @@ serialization = "1.7.1"
 dagger = "2.51.1"
 
 ktor = "2.3.12"
+jetbrainsKotlinJvm = "2.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -54,8 +56,8 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization"}
-kotlinx-serialization-json-v163 = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 ktor-bom = { module = "io.ktor:ktor-bom", version.ref = "ktorBom" }
 ktor-client-android = { module = "io.ktor:ktor-client-android" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktorClientCio" }
@@ -81,5 +83,6 @@ jetbrains-kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version
 google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 google-hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger"}
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 
 
