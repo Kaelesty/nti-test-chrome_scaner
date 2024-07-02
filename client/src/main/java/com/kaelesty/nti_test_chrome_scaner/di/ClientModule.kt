@@ -12,8 +12,8 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-interface ClientModule {
+class ClientModule {
 
-	@Binds
-	fun bindClient(impl: ClientImpl): Client
+	@Provides
+	fun provideClient(): Client = ClientImpl
 }

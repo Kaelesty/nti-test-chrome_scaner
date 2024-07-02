@@ -1,5 +1,6 @@
-package com.kaelesty.server.presentation
+package com.kaelesty.server.presentation.main
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kaelesty.server.data.logs.LogsTool
@@ -8,7 +9,6 @@ import com.kaelesty.server.domain.connection.Server
 import com.kaelesty.server.domain.scanner.ScannerRepo
 import com.kaelesty.shared.domain.MemoryUsage
 import com.kaelesty.shared.domain.ServerAction
-import com.kaelesty.shared.domain.bytesToMb
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -42,6 +42,16 @@ class MainViewModel @Inject constructor(
 		collectCurrentServerPort()
 		observeMemoryUsage()
 		observeLogs()
+		viewModelScope.launch(Dispatchers.IO) {
+			server.serverStateFlow.collect {
+				Log.d("MainViewModel", "New state: $it")
+				_state.emit(
+					_state.value.copy(
+						isServerStarted = it == Server.ServerState.STARTED
+					)
+				)
+			}
+		}
 	}
 
 	fun setPort(newValue: String) {
@@ -72,7 +82,7 @@ class MainViewModel @Inject constructor(
 	}
 
 	fun switchServer() {
-
+		server.switchServer()
 	}
 
 	private fun validatePort(port: String) = try {

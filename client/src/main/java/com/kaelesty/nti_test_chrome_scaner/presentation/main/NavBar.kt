@@ -21,7 +21,6 @@ import com.kaelesty.nti_test_chrome_scaner.presentation.navigation.NavigationSta
 fun NavBar(navigationState: NavigationState) {
 	Card(
 		modifier = Modifier
-			.padding(16.dp)
 			.fillMaxWidth()
 	) {
 		val items = listOf(

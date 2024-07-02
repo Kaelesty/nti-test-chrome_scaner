@@ -13,13 +13,10 @@ import io.ktor.websocket.close
 import io.ktor.websocket.readText
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.serialization.json.Json
-import javax.inject.Inject
 
-class WebSocketClient @Inject constructor(
-	private val client: Client
+class WebSocketClient(
+	private val client: Client,
 ) {
-
-	private val url = "ws://192.168.3.2:8080/actions"
 
 	private val httpClient = HttpClient(CIO) {
 		install(WebSockets)
@@ -27,7 +24,8 @@ class WebSocketClient @Inject constructor(
 
 	private var webSocketSession: WebSocketSession? = null
 
-	suspend fun connect() {
+	suspend fun connect(url: String) {
+		Log.d("ClientConnection", "connecting to $url")
 		webSocketSession = httpClient.webSocketSession(url).also {
 			it.incoming.consumeEach {
 				Log.d("WebSocketClient", "Server action received")

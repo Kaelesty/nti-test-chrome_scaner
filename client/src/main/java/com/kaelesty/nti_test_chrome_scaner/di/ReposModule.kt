@@ -17,6 +17,10 @@ interface ReposModule {
 	@Binds
 	fun bindServerConfigRepo(impl: ServerConfigRepoImpl): ServerConfigRepo
 
-	@Binds
-	fun provideMemoryUsageRepo(impl: MemoryUsageRepoImpl): MemoryUsageRepo
+
+	companion object {
+
+		@Provides
+		fun provideMemoryUsageRepoImpl(): MemoryUsageRepo = MemoryUsageRepoImpl
+	}
 }

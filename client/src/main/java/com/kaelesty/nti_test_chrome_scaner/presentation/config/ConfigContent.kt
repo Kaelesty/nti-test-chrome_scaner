@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kaelesty.nti_test_chrome_scaner.R
-import com.kaelesty.nti_test_chrome_scaner.presentation.memoryusage.MemoryUsageCard
 
 @Composable
 fun ConfigContent() {
@@ -32,7 +31,6 @@ fun ConfigContent() {
 
 	Column {
 		ConnectionParamsCard(state, viewModel)
-		MemoryUsageCard()
 	}
 }
 
@@ -84,9 +82,14 @@ private fun ConnectionParamsCard(
 				Text(text = stringResource(R.string.save))
 			}
 			Text(
-				text = "The server must be restarted for the settings to apply",
+				text = "Connection must be restarted for the settings to apply",
 				fontSize = 12.sp, color = Color.Gray
 			)
+			Spacer(modifier = Modifier.height(12.dp))
+			// restart
+			Button(onClick = { viewModel.reconnect() }, Modifier.fillMaxWidth()) {
+				Text(stringResource(R.string.reconnect))
+			}
 		}
 	}
 }

@@ -5,6 +5,7 @@ import android.os.Build
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kaelesty.nti_test_chrome_scaner.domain.client.Client
 import com.kaelesty.nti_test_chrome_scaner.domain.config.GetServerConfigUseCase
 import com.kaelesty.nti_test_chrome_scaner.domain.config.SaveServerConfigUseCase
 import com.kaelesty.nti_test_chrome_scaner.domain.config.ServerConfig
@@ -20,6 +21,7 @@ import javax.inject.Inject
 class ConfigViewModel @Inject constructor(
 	private val getServerConfigUseCase: GetServerConfigUseCase,
 	private val saveServerConfigUseCase: SaveServerConfigUseCase,
+	private val client: Client
 ) : ViewModel() {
 
 	data class State(
@@ -55,6 +57,10 @@ class ConfigViewModel @Inject constructor(
 				}
 			}
 		}
+	}
+
+	fun reconnect() {
+		client.reconnect()
 	}
 
 	fun changeIP(newValue: String) {

@@ -3,23 +3,21 @@ package com.kaelesty.nti_test_chrome_scaner.data.memoryusage
 import android.util.Log
 import com.kaelesty.nti_test_chrome_scaner.domain.memoryusage.MemoryUsageRepo
 import com.kaelesty.shared.domain.MemoryUsage
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class MemoryUsageRepoImpl @Inject constructor(): MemoryUsageRepo {
+object MemoryUsageRepoImpl: MemoryUsageRepo {
 
 	private val _memoryUsageFlow = MutableSharedFlow<MemoryUsage>()
 
-	override fun getMemoryUsageFlow(): SharedFlow<MemoryUsage> {
-		return _memoryUsageFlow.asSharedFlow()
+	override fun getMemoryUsageFlow(): Flow<MemoryUsage> = flow {
+		Log.d("WebSocketClient", "Observing started")
+		_memoryUsageFlow.collect{
+			emit(it)
+			Log.d("WebSocketClient", "Emitted to cold flow")
+		}
 	}
 
 	suspend fun setMemoryUsage(memoryUsage: MemoryUsage) {

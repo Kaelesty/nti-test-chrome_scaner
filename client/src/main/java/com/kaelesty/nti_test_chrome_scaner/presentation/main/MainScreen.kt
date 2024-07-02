@@ -1,14 +1,17 @@
 package com.kaelesty.nti_test_chrome_scaner.presentation.main
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.kaelesty.nti_test_chrome_scaner.presentation.config.ConfigContent
-import com.kaelesty.nti_test_chrome_scaner.presentation.memoryusage.MemoryUsageCard
+import com.kaelesty.nti_test_chrome_scaner.presentation.serverstate.MemoryUsageCard
 import com.kaelesty.nti_test_chrome_scaner.presentation.navigation.NavGraph
 import com.kaelesty.nti_test_chrome_scaner.presentation.navigation.Screen
 import com.kaelesty.nti_test_chrome_scaner.presentation.navigation.rememberMusicNavigationState
@@ -21,7 +24,14 @@ fun MainScreen() {
 	Scaffold(
 		modifier = Modifier.fillMaxSize(),
 		bottomBar = {
-			NavBar(navigationState = navigationState)
+			Column(
+				modifier = Modifier
+					.padding(horizontal = 16.dp)
+			) {
+				MemoryUsageCard()
+				Spacer(modifier = Modifier.height(4.dp))
+				NavBar(navigationState = navigationState)
+			}
 		}
 	) {
 		Column(

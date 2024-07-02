@@ -6,4 +6,5 @@
     <string name="ip_address">IP address</string>
     <string name="edit_server_configuration">Edit server configuration</string>
     <string name="save">Save</string>
+    <string name="reconnect">Reconnect</string>
 </resources>

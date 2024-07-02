@@ -5,12 +5,14 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.kaelesty.server.data.logs.LogsTool
 import com.kaelesty.server.domain.connection.ConnectionRepo
-import com.kaelesty.server.presentation.dataStore
+import com.kaelesty.server.presentation.main.dataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class ConnectionRepoImpl @Inject constructor(
 	@ApplicationContext private val context: Context,
 ): ConnectionRepo {

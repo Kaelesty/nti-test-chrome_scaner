@@ -1,4 +1,4 @@
-package com.kaelesty.server.presentation
+package com.kaelesty.server.presentation.main
 
 import android.content.Context
 import android.os.Bundle

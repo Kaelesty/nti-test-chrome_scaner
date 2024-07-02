@@ -1,4 +1,4 @@
-package com.kaelesty.server.presentation
+package com.kaelesty.server.presentation.main
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
