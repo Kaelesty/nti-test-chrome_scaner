@@ -6,6 +6,8 @@ plugins {
 	alias(libs.plugins.google.hilt)
 
 	kotlin("plugin.serialization") version "2.0.0"
+
+	//id("io.ktor.plugin") version "2.3.12"
 }
 
 
@@ -51,6 +53,7 @@ android {
 	packaging {
 		resources {
 			excludes += "/META-INF/{AL2.0,LGPL2.1}"
+			excludes += "META-INF/*"
 		}
 	}
 }
@@ -73,10 +76,10 @@ dependencies {
 	debugImplementation(libs.androidx.ui.tooling)
 	debugImplementation(libs.androidx.ui.test.manifest)
 
-	implementation(libs.ktor.client.core)
-	implementation(libs.ktor.client.cio)
-	implementation(libs.ktor.client.websockets)
-	implementation(libs.ktor.ktor.client.logging)
+	implementation(libs.ktor.server.netty)
+	implementation(libs.ktor.server.core.jvm)
+	implementation(libs.ktor.ktor.server.websockets.jvm)
+	implementation(libs.ktor.server.netty.jvm)
 
 	implementation(libs.hilt.android)
 	ksp(libs.hilt.compiler)
@@ -90,4 +93,6 @@ dependencies {
 	implementation(libs.androidx.room.ktx)
 
 	implementation(libs.androidx.datastore.preferences)
+
+	implementation(libs.java.websocket)
 }

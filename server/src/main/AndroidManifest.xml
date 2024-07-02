@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Ntitestchrome_scaner">
         <service
-            android:name=".presentation.service.ConnectionService"
+            android:name=".presentation.service.ServerConnectionService"
             android:enabled="true"
             android:foregroundServiceType="dataSync"
             android:exported="true"/>

@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
+
     <application
         android:allowBackup="true"
         android:name=".system.ModifiedApplication"
@@ -13,6 +17,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Ntitestchrome_scaner"
         tools:targetApi="31">
+        <service
+            android:name=".presentation.main.ClientService"
+            android:enabled="true"
+            android:foregroundServiceType="dataSync"
+            android:exported="true"/>
         <activity
             android:name=".presentation.main.MainActivity"
             android:exported="true"

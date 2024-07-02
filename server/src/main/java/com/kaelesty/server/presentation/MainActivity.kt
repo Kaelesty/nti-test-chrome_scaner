@@ -4,25 +4,10 @@ import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.datastore.preferences.preferencesDataStore
-import com.kaelesty.server.data.scanner.FilesTool
-import com.kaelesty.server.domain.scanner.Scan
-import com.kaelesty.server.domain.scanner.ScannerRepo
-import com.kaelesty.server.presentation.service.ConnectionService
+import com.kaelesty.server.presentation.service.ServerConnectionService
 import com.kaelesty.server.presentation.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 val Context.dataStore by preferencesDataStore(
 	name = "preferences"
@@ -46,7 +31,7 @@ class MainActivity : ComponentActivity() {
 
 	private fun startConnectionService() {
 		startForegroundService(
-			ConnectionService.newIntent(this)
+			ServerConnectionService.newIntent(this)
 		)
 	}
 }
