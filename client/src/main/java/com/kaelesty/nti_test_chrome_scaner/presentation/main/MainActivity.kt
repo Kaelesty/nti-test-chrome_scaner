@@ -15,19 +15,22 @@ val Context.dataStore by preferencesDataStore(
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-//	private val component by lazy {
-//		(application as ModifiedApplication)
-//			.component
-//	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		//component.inject(this)
+
+		startService()
 
 		setContent {
 			AppTheme {
 				MainScreen()
 			}
 		}
+	}
+
+	private fun startService() {
+		startForegroundService(
+			ClientService.newIntent(this)
+		)
 	}
 }

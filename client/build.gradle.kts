@@ -14,7 +14,7 @@ android {
 
 	defaultConfig {
 		applicationId = "com.kaelesty.nti_test_chrome_scaner"
-		minSdk = 24
+		minSdk = 26
 		targetSdk = 34
 		versionCode = 1
 		versionName = "1.0"
@@ -77,6 +77,10 @@ dependencies {
 	implementation(libs.hilt.android)
 	ksp(libs.hilt.compiler)
 	implementation(libs.androidx.hilt.navigation.compose)
+
+	implementation(libs.ktor.client.cio)
+	implementation(libs.ktor.client.core)
+	implementation(libs.ktor.client.websockets)
 
 	implementation(libs.androidx.datastore.preferences)
 
