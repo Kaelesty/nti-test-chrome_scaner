@@ -76,8 +76,8 @@ class ServerConnectionService : Service() {
 						)
 					}
 				}
-
-				incoming.consumeEach { frame ->
+				this.incoming.consumeEach { frame ->
+					Log.d("ServerConnectionService", "New incoming")
 					if (frame is Frame.Text) {
 						val action = Json.decodeFromString<ClientAction>(frame.readText())
 						server.handleClientAction(action)

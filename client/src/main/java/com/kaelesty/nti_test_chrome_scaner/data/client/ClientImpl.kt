@@ -1,12 +1,14 @@
 package com.kaelesty.nti_test_chrome_scaner.data.client
 
 import android.util.Log
-import com.kaelesty.nti_test_chrome_scaner.data.memoryusage.MemoryUsageRepoImpl
+import com.kaelesty.nti_test_chrome_scaner.data.memoryusage.ServerStateRepoImpl
+import com.kaelesty.nti_test_chrome_scaner.data.scanlist.ScanListRepoImpl
 import com.kaelesty.nti_test_chrome_scaner.domain.client.Client
 import com.kaelesty.shared.domain.ClientAction
 import com.kaelesty.shared.domain.ServerAction
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -31,8 +33,22 @@ object ClientImpl: Client {
 		when (action) {
 			is ServerAction.UpdateMemoryUsage -> {
 				scope.launch {
-					MemoryUsageRepoImpl.setMemoryUsage(action.memoryUsage)
+					ServerStateRepoImpl.setMemoryUsage(action.memoryUsage)
 				}
+			}
+
+			is ServerAction.SetScanningState -> {
+				scope.launch {
+					ServerStateRepoImpl.setScanningStateFlow(action.isScanningStarted)
+				}
+			}
+
+			is ServerAction.NewScan -> {
+				ScanListRepoImpl.addScan(action.scan)
+			}
+
+			is ServerAction.SetScanList -> {
+				ScanListRepoImpl.setScanList(action.scans)
 			}
 		}
 	}
@@ -47,6 +63,13 @@ object ClientImpl: Client {
 		Log.d("ClientConnection", "reconnecting")
 		scope.launch {
 			_connectionStateFlow.emit(Client.ConnectionState.LOADING)
+			delay(3000)
+			executeAction(
+				ClientAction.RequestScanningState
+			)
+			executeAction(
+				ClientAction.RequestScanList
+			)
 		}
 	}
 

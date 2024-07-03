@@ -11,7 +11,12 @@ import io.ktor.websocket.Frame
 import io.ktor.websocket.WebSocketSession
 import io.ktor.websocket.close
 import io.ktor.websocket.readText
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 class WebSocketClient(
@@ -21,16 +26,26 @@ class WebSocketClient(
 	private val httpClient = HttpClient(CIO) {
 		install(WebSockets)
 	}
+	private val _messageFlow = MutableSharedFlow<String>()
 
 	private var webSocketSession: WebSocketSession? = null
 
+	private val scope = CoroutineScope(Dispatchers.IO)
+
 	suspend fun connect(url: String) {
-		Log.d("ClientConnection", "connecting to $url")
+		Log.d("WebSocketClient", "connecting to $url")
 		webSocketSession = httpClient.webSocketSession(url).also {
+			scope.launch {
+				_messageFlow.collect { message ->
+					it.send(Frame.Text(message))
+					Log.d("WebSocketClient", "Sent to server: $message")
+				}
+			}
 			it.incoming.consumeEach {
-				Log.d("WebSocketClient", "Server action received")
 				client.handleServerAction(
-					Json.decodeFromString<ServerAction>((it as Frame.Text).readText())
+					Json.decodeFromString<ServerAction>((it as Frame.Text).readText()).also {
+						Log.d("WebSocketClient", "Server action received: $it")
+					}
 				)
 			}
 		}
@@ -38,15 +53,12 @@ class WebSocketClient(
 	}
 
 	suspend fun send(message: String) {
-		webSocketSession?.let {
-			it.send(Frame.Text(message))
-			Log.d("MainService", "sent finished")
-		}
+		_messageFlow.emit(message)
 	}
 
 	suspend fun disconnect() {
 		webSocketSession?.close()
-		httpClient.close()
+		//httpClient.close()
 	}
 
 	suspend fun listen(onMessageReceived: suspend (String) -> Unit) {

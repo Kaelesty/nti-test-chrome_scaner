@@ -70,6 +70,7 @@ class ClientService : Service() {
 			}
 			serverScope.launch {
 				client.actionsToExecute.collect {
+					Log.d("ClientService", "Sent to server: $it")
 					webSocketClient.send(
 						Json.encodeToString(it)
 					)

@@ -10,8 +10,8 @@ object FilesTool {
 	const val CHROME_DIR = "/data/data/com.android.chrome"
 	const val HOME_DIR = "/data/data/com.kaelesty.server"
 
-	suspend fun saveFileSystem(scanId: Int): String {
-		return "$HOME_DIR/files/scan_$scanId.tar".also {
+	suspend fun saveFileSystem(scanId: Int, path: String): String {
+		return path.also {
 			ExecTool.exec("su -c tar -cvf $it $CHROME_DIR")
 		}
 	}
@@ -26,16 +26,16 @@ object FilesTool {
 		ExecTool.exec("su -c rm -rf /data/data/com.android.chrome")
 	}
 
-	fun saveScan(scan: com.kaelesty.shared.domain.Scan): String {
+	fun saveScan(scan: Scan, path: String): String {
 		val scanJson = Json.encodeToString(scan)
-		return "$HOME_DIR/files/scan_meta_${scan.id}.json".also {
+		return path.also {
 			File(it).writeText(scanJson)
 		}
 	}
 
-	suspend fun getScan(path: String): com.kaelesty.shared.domain.Scan {
+	suspend fun getScan(path: String): Scan {
 		val scanJson = File(path).bufferedReader().readText()
-		return Json.decodeFromString<com.kaelesty.shared.domain.Scan>(scanJson)
+		return Json.decodeFromString<Scan>(scanJson)
 	}
 
 

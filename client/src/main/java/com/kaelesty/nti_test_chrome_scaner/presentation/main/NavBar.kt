@@ -7,6 +7,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -41,7 +42,11 @@ fun NavBar(navigationState: NavigationState) {
 						onClick = { navigationState.navigateTo(navItem.screen.route) },
 						icon = {
 							Icon(navItem.icon, contentDescription = null)
-						})
+						},
+						label = {
+							Text(text = navItem.label)
+						}
+					)
 				}
 			}
 		}

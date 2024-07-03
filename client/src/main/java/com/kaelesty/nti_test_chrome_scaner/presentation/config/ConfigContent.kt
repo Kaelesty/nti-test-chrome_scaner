@@ -15,6 +15,9 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -39,6 +42,18 @@ private fun ConnectionParamsCard(
 	state: ConfigViewModel.State,
 	viewModel: ConfigViewModel
 ) {
+
+	var startScanningDialogueShown by rememberSaveable {
+		mutableStateOf(false)
+	}
+
+	if (startScanningDialogueShown) {
+		StartScanningDialog(
+			onAccept = { viewModel.startScanning(it) },
+			onReject = { startScanningDialogueShown = false }
+		)
+	}
+
 	Card(
 		modifier = Modifier
 			.padding(16.dp)
@@ -47,13 +62,13 @@ private fun ConnectionParamsCard(
 		Column(
 			modifier = Modifier.padding(12.dp)
 		) {
-			Text(text = "Server connection parameters", fontSize = 24.sp)
+			Text(text = stringResource(R.string.server_connection_parameters), fontSize = 24.sp)
 			Spacer(modifier = Modifier.height(12.dp))
 
 			// ip
 			TextField(
 				value = state.editableServerConfig.ip, onValueChange = { viewModel.changeIP(it) },
-				supportingText = { Text("IP Address") }, isError = state.isIpInvalid,
+				supportingText = { Text(stringResource(R.string.ip_address)) }, isError = state.isIpInvalid,
 				modifier = Modifier.fillMaxWidth(), singleLine = true,
 				leadingIcon = {
 					if (state.currentServerConfig.ip == state.editableServerConfig.ip) {
@@ -66,7 +81,7 @@ private fun ConnectionParamsCard(
 			TextField(
 				value = state.editableServerConfig.port,
 				onValueChange = { viewModel.changePort(it) },
-				supportingText = { Text("Port") },
+				supportingText = { Text(stringResource(R.string.port)) },
 				isError = state.isPortInvalid,
 				modifier = Modifier.fillMaxWidth(),
 				singleLine = true,
@@ -82,13 +97,23 @@ private fun ConnectionParamsCard(
 				Text(text = stringResource(R.string.save))
 			}
 			Text(
-				text = "Connection must be restarted for the settings to apply",
+				text = stringResource(R.string.connection_must_be_restarted_for_the_settings_to_apply),
 				fontSize = 12.sp, color = Color.Gray
 			)
 			Spacer(modifier = Modifier.height(12.dp))
 			// restart
 			Button(onClick = { viewModel.reconnect() }, Modifier.fillMaxWidth()) {
 				Text(stringResource(R.string.reconnect))
+			}
+			if (state.isScanningStarted) {
+				Button(onClick = { viewModel.stopScanning() }, Modifier.fillMaxWidth()) {
+					Text(stringResource(R.string.stop_scanning))
+				}
+			}
+			else {
+				Button(onClick = { startScanningDialogueShown = true }, Modifier.fillMaxWidth()) {
+					Text(stringResource(R.string.start_scanning))
+				}
 			}
 		}
 	}

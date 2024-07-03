@@ -3,7 +3,7 @@ package com.kaelesty.nti_test_chrome_scaner.presentation.serverstate
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kaelesty.nti_test_chrome_scaner.domain.client.Client
-import com.kaelesty.nti_test_chrome_scaner.domain.memoryusage.GetMemoryUsageUseCase
+import com.kaelesty.nti_test_chrome_scaner.domain.serverstate.GetMemoryUsageUseCase
 import com.kaelesty.shared.domain.MemoryUsage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

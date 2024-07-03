@@ -9,6 +9,9 @@ import com.kaelesty.nti_test_chrome_scaner.domain.config.ServerConfigRepo
 import com.kaelesty.nti_test_chrome_scaner.presentation.main.dataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -26,7 +29,6 @@ class ServerConfigRepoImpl @Inject constructor(
 		context.dataStore.edit { prefs ->
 			prefs[CONFIG_DATASTORE_KEY] = Json.encodeToString(config)
 		}
-		Log.d("EditConfig", "OnFinish")
 	}
 
 	override fun getServerConfig(): Flow<ServerConfig?> = context

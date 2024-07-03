@@ -9,20 +9,24 @@ import androidx.compose.ui.graphics.vector.ImageVector
 sealed class NavItem(
 	val screen: Screen,
 	val icon: ImageVector,
+	val label: String,
 ) {
 
 	object Visual: NavItem(
 		Screen.Visual,
 		Icons.Default.Share,
+		"Visualization"
 	)
 
 	object Scanlist: NavItem(
 		Screen.ScanList,
-		Icons.Default.Menu
+		Icons.Default.Menu,
+		"Scans list"
 	)
 
 	object Config: NavItem(
 		Screen.Config,
-		Icons.Default.Settings
+		Icons.Default.Settings,
+		"Config"
 	)
 }

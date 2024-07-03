@@ -15,6 +15,8 @@ import com.kaelesty.nti_test_chrome_scaner.presentation.serverstate.MemoryUsageC
 import com.kaelesty.nti_test_chrome_scaner.presentation.navigation.NavGraph
 import com.kaelesty.nti_test_chrome_scaner.presentation.navigation.Screen
 import com.kaelesty.nti_test_chrome_scaner.presentation.navigation.rememberMusicNavigationState
+import com.kaelesty.nti_test_chrome_scaner.presentation.scanlist.ScanListContent
+import com.kaelesty.nti_test_chrome_scaner.presentation.visual.VisualContent
 
 @Composable
 fun MainScreen() {
@@ -41,8 +43,8 @@ fun MainScreen() {
 				navHostController = navigationState.navHostController,
 				startDestination = Screen.Visual.route,
 				configContent = { ConfigContent() },
-				visualContent = { Text(text = "2") },
-				scanlistContent = { Text(text = "3")}
+				visualContent = { VisualContent() },
+				scanlistContent = { ScanListContent() }
 			)
 		}
 	}

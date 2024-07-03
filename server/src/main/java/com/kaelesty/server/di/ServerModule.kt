@@ -14,8 +14,8 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-class ServerModule {
+interface ServerModule {
 
-	@Provides
-	fun bindServer(): Server = ServerImpl
+	@Binds
+	fun bindServer(impl: ServerImpl): Server
 }

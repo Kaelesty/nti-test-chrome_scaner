@@ -9,11 +9,14 @@ import com.kaelesty.nti_test_chrome_scaner.domain.client.Client
 import com.kaelesty.nti_test_chrome_scaner.domain.config.GetServerConfigUseCase
 import com.kaelesty.nti_test_chrome_scaner.domain.config.SaveServerConfigUseCase
 import com.kaelesty.nti_test_chrome_scaner.domain.config.ServerConfig
+import com.kaelesty.nti_test_chrome_scaner.domain.serverstate.GetScanningStateFlowUseCase
+import com.kaelesty.shared.domain.ClientAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,6 +24,7 @@ import javax.inject.Inject
 class ConfigViewModel @Inject constructor(
 	private val getServerConfigUseCase: GetServerConfigUseCase,
 	private val saveServerConfigUseCase: SaveServerConfigUseCase,
+	private val getScanningStateFlowUseCase: GetScanningStateFlowUseCase,
 	private val client: Client
 ) : ViewModel() {
 
@@ -28,7 +32,8 @@ class ConfigViewModel @Inject constructor(
 		val editableServerConfig: ServerConfig,
 		val currentServerConfig: ServerConfig,
 		val isIpInvalid: Boolean,
-		val isPortInvalid: Boolean
+		val isPortInvalid: Boolean,
+		val isScanningStarted: Boolean = false,
 	)
 
 	private val _state: MutableStateFlow<State> = MutableStateFlow(
@@ -39,6 +44,23 @@ class ConfigViewModel @Inject constructor(
 	val state: StateFlow<State> get() = _state.asStateFlow()
 
 	init {
+		observeServerConfig()
+		observeScanningState()
+	}
+
+	private fun observeScanningState() {
+		viewModelScope.launch(Dispatchers.IO) {
+			getScanningStateFlowUseCase().collect {
+				_state.emit(
+					_state.value.copy(
+						isScanningStarted = it
+					)
+				)
+			}
+		}
+	}
+
+	private fun observeServerConfig() {
 		viewModelScope.launch(Dispatchers.IO) {
 			getServerConfigUseCase().collect {
 				it?.let {
@@ -110,6 +132,19 @@ class ConfigViewModel @Inject constructor(
 			}
 		}
 	}
+
+	fun startScanning(delaySeconds: Int) {
+		client.executeAction(
+			ClientAction.StartScanning(delaySeconds)
+		)
+	}
+
+	fun stopScanning() {
+		client.executeAction(
+			ClientAction.StopScanning
+		)
+	}
+
 
 	private fun validatePort(port: String) = try {
 		port.toInt() in 0 .. 65535

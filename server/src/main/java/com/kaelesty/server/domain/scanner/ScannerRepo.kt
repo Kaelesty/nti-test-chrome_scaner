@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ScannerRepo {
 
-	suspend fun makeScan()
+	suspend fun makeScan(): Scan?
 
 	fun getScans(): Flow<List<Scan>>
 

@@ -12,16 +12,16 @@ object ScanTool {
 	const val CHROME_DIR = FilesTool.CHROME_DIR
 	const val HOME_DIR = FilesTool.HOME_DIR
 
-	fun makeScan(lastScan: com.kaelesty.shared.domain.Scan?): com.kaelesty.shared.domain.Scan {
-		val scan = com.kaelesty.shared.domain.Scan(
+	fun makeScan(lastScan: Scan?): Scan {
+		val scan = Scan(
 			id = lastScan?.id?.plus(1) ?: 0,
-			meta = com.kaelesty.shared.domain.Scan.Meta(
+			meta = Scan.Meta(
 				System.currentTimeMillis(),
 				0,
 				0
 			),
-			root = com.kaelesty.shared.domain.Scan.Node.DirectoryNode(
-				com.kaelesty.shared.domain.Scan.Node.NodeType.DEFAULT,
+			root = Scan.Node.DirectoryNode(
+				Scan.Node.NodeType.DEFAULT,
 				name = CHROME_DIR,
 				subNodes = ExecTool.exec("su -c ls $CHROME_DIR -q -l -F")
 					.filter {
@@ -32,7 +32,7 @@ object ScanTool {
 						convertLsOutputToNode(
 							output = it,
 							lastScanNode = lastScan?.let {
-								(lastScan.root as com.kaelesty.shared.domain.Scan.Node.DirectoryNode).let { dirNode ->
+								(lastScan.root as Scan.Node.DirectoryNode).let { dirNode ->
 									dirNode.subNodes.find { node ->
 										node.name == fileMeta.name
 									}
@@ -52,30 +52,30 @@ object ScanTool {
 		)
 	}
 
-	fun getScanFromDbModel(dbModel: ScanDbModel): com.kaelesty.shared.domain.Scan {
+	fun getScanFromDbModel(dbModel: ScanDbModel): Scan {
 		val scanJson = File(dbModel.metaFilePath).bufferedReader().readLines()[0]
-		return Json.decodeFromString<com.kaelesty.shared.domain.Scan>(scanJson)
+		return Json.decodeFromString<Scan>(scanJson)
 	}
 
-	fun equals(scan1: com.kaelesty.shared.domain.Scan, scan2: com.kaelesty.shared.domain.Scan): Boolean {
+	fun equals(scan1: Scan, scan2: Scan): Boolean {
 		return scan1.root == scan2.root
 	}
 
 	private fun convertLsOutputToNode(
 		output: String,
-		lastScanNode: com.kaelesty.shared.domain.Scan.Node?,
+		lastScanNode: Scan.Node?,
 		parentPath: String
-	): com.kaelesty.shared.domain.Scan.Node {
+	): Scan.Node {
 		// -rw------- 1 u0_a107 u0_a107 322436 2024-06-30 13:52 0
 		// -rw------- 1 u0_a107 u0_a107  14820 2024-06-30 13:52 0.jpeg
 		// drwx------ 26 u0_a107 u0_a107       4096 2024-07-01 07:39 app_chrome/
 		// drwxrws--x 10 u0_a107 u0_a107_cache 4096 2024-07-01 07:39 cache/
 		val fileMeta = lsOutputToFileMeta(output)
 		return if (fileMeta.name.endsWith("/")) { // is dir
-			com.kaelesty.shared.domain.Scan.Node.DirectoryNode(
+			Scan.Node.DirectoryNode(
 				name = fileMeta.name,
-				status = if (lastScanNode == null) com.kaelesty.shared.domain.Scan.Node.NodeType.NEW
-				else com.kaelesty.shared.domain.Scan.Node.NodeType.DEFAULT,
+				status = if (lastScanNode == null) Scan.Node.NodeType.NEW
+				else Scan.Node.NodeType.DEFAULT,
 				subNodes = ExecTool
 					.exec("su -c ls $parentPath/${fileMeta.name} -q -l -F")
 					.filter {
@@ -85,7 +85,7 @@ object ScanTool {
 						convertLsOutputToNode(
 							output = it,
 							lastScanNode = lastScanNode?.let { dirNode ->
-								(dirNode as com.kaelesty.shared.domain.Scan.Node.DirectoryNode).subNodes.find { node ->
+								(dirNode as Scan.Node.DirectoryNode).subNodes.find { node ->
 									node.name == fileMeta.name
 								}
 							},
@@ -94,24 +94,24 @@ object ScanTool {
 					}
 			)
 		} else { // is file
-			com.kaelesty.shared.domain.Scan.Node.FileNode(
+			Scan.Node.FileNode(
 				size = fileMeta.size,
 				name = fileMeta.name,
-				status = if (lastScanNode == null) com.kaelesty.shared.domain.Scan.Node.NodeType.NEW
-				else if ((lastScanNode as com.kaelesty.shared.domain.Scan.Node.FileNode).size != fileMeta.size) com.kaelesty.shared.domain.Scan.Node.NodeType.MODIFIED
-				else com.kaelesty.shared.domain.Scan.Node.NodeType.DEFAULT
+				status = if (lastScanNode == null) Scan.Node.NodeType.NEW
+				else if ((lastScanNode as Scan.Node.FileNode).size != fileMeta.size) Scan.Node.NodeType.MODIFIED
+				else Scan.Node.NodeType.DEFAULT
 			)
 		}
 	}
 
-	private fun measureScanFilesSize(scan: com.kaelesty.shared.domain.Scan): Long {
-		fun measureNodeSize(node: com.kaelesty.shared.domain.Scan.Node): Long {
+	private fun measureScanFilesSize(scan: Scan): Long {
+		fun measureNodeSize(node: Scan.Node): Long {
 			return when (node) {
-				is com.kaelesty.shared.domain.Scan.Node.FileNode -> {
+				is Scan.Node.FileNode -> {
 					node.size
 				}
 
-				is com.kaelesty.shared.domain.Scan.Node.DirectoryNode -> {
+				is Scan.Node.DirectoryNode -> {
 					node.subNodes.sumOf {
 						measureNodeSize(it)
 					}

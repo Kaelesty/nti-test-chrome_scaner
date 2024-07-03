@@ -1,9 +1,11 @@
 package com.kaelesty.nti_test_chrome_scaner.di
 
 import com.kaelesty.nti_test_chrome_scaner.data.config.ServerConfigRepoImpl
-import com.kaelesty.nti_test_chrome_scaner.data.memoryusage.MemoryUsageRepoImpl
+import com.kaelesty.nti_test_chrome_scaner.data.memoryusage.ServerStateRepoImpl
+import com.kaelesty.nti_test_chrome_scaner.data.scanlist.ScanListRepoImpl
 import com.kaelesty.nti_test_chrome_scaner.domain.config.ServerConfigRepo
-import com.kaelesty.nti_test_chrome_scaner.domain.memoryusage.MemoryUsageRepo
+import com.kaelesty.nti_test_chrome_scaner.domain.scanlist.ScanListRepo
+import com.kaelesty.nti_test_chrome_scaner.domain.serverstate.ServerStateRepo
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -21,6 +23,10 @@ interface ReposModule {
 	companion object {
 
 		@Provides
-		fun provideMemoryUsageRepoImpl(): MemoryUsageRepo = MemoryUsageRepoImpl
+		fun provideMemoryUsageRepo(): ServerStateRepo = ServerStateRepoImpl
+
+		@Provides
+		fun provideScanListRepo(): ScanListRepo = ScanListRepoImpl
+
 	}
 }

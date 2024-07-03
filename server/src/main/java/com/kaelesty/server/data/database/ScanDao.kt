@@ -14,6 +14,9 @@ interface ScanDao {
 	@Query("SELECT * FROM scans")
 	fun getScans(): Flow<List<ScanDbModel>>
 
+	@Query("SELECT * FROM scans")
+	fun getScansStatic(): List<ScanDbModel>
+
 	@Query("SELECT * FROM scans WHERE id = :scanId")
 	fun getScanById(scanId: Int): ScanDbModel
 
