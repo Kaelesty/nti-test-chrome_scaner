@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">nti-test-chrome_scanner</string>
+    <string name="app_name">client</string>
     <string name="port_is_invalid">port is invalid</string>
     <string name="ip_address_is_invalid">IP address is invalid</string>
     <string name="port">Port</string>

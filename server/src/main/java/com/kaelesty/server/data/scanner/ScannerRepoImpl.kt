@@ -9,6 +9,7 @@ import com.kaelesty.shared.domain.Scan
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -30,6 +31,13 @@ class ScannerRepoImpl @Inject constructor(
 			val metaFilePath = "$HOME_DIR/files/scan_meta_${scan.id}.json"
 			val fileSystemFilePath = "$HOME_DIR/files/scan_${scan.id}.tar"
 
+			FilesTool.saveScan(
+				scan, metaFilePath
+			)
+			val process = FilesTool.saveFileSystem(
+				scan.id, fileSystemFilePath
+			)
+			process.waitFor()
 			scanDao.saveScan(
 				ScanDbModel(
 					scan.id,
@@ -37,14 +45,6 @@ class ScannerRepoImpl @Inject constructor(
 				)
 			)
 
-			withContext(Dispatchers.IO) {
-				FilesTool.saveScan(
-					scan, metaFilePath
-				)
-				FilesTool.saveFileSystem(
-					scan.id, fileSystemFilePath
-				)
-			}
 			LogsTool.log("New scan saved with id ${scan.id}")
 			return scan
 		}
@@ -70,7 +70,8 @@ class ScannerRepoImpl @Inject constructor(
 
 	override suspend fun restoreFileSystemByScan(scanId: Int) {
 		val archivePath = scanDao.getScanById(scanId).archiveFilePath
-		FilesTool.restoreFileSystem(archivePath)
+		val process = FilesTool.restoreFileSystem(archivePath)
+		process.waitFor()
 		LogsTool.log("File system restored by scan with id $scanId")
 	}
 }

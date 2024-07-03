@@ -10,33 +10,29 @@ object FilesTool {
 	const val CHROME_DIR = "/data/data/com.android.chrome"
 	const val HOME_DIR = "/data/data/com.kaelesty.server"
 
-	suspend fun saveFileSystem(scanId: Int, path: String): String {
-		return path.also {
-			ExecTool.exec("su -c tar -cvf $it $CHROME_DIR")
+	fun saveFileSystem(scanId: Int, path: String): Process {
+		return ExecTool.execProcessed("su -c tar -cvf $path $CHROME_DIR")
+	}
+
+	fun restoreFileSystem(archivePath: String): Process {
+		ProcessTool.killChrome()
+		clearFileSystem()
+		return ExecTool.execProcessed("su -c tar -xvf $archivePath -C /")
+	}
+
+	fun saveScan(scan: Scan, path: String) {
+		val scanJson = Json.encodeToString(scan)
+		path.also {
+			File(it).writeText(scanJson)
 		}
 	}
 
-	suspend fun restoreFileSystem(archivePath: String) {
-		ProcessTool.killChrome()
-		clearFileSystem()
-		ExecTool.exec("su -c tar -xvf $archivePath -C /")
+	fun getScan(path: String): Scan {
+		val scanJson = File(path).bufferedReader().readText()
+		return Json.decodeFromString<Scan>(scanJson)
 	}
 
 	private fun clearFileSystem() {
 		ExecTool.exec("su -c rm -rf /data/data/com.android.chrome")
 	}
-
-	fun saveScan(scan: Scan, path: String): String {
-		val scanJson = Json.encodeToString(scan)
-		return path.also {
-			File(it).writeText(scanJson)
-		}
-	}
-
-	suspend fun getScan(path: String): Scan {
-		val scanJson = File(path).bufferedReader().readText()
-		return Json.decodeFromString<Scan>(scanJson)
-	}
-
-
 }

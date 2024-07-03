@@ -8,7 +8,8 @@
 
     <application
         android:allowBackup="true"
-        android:name=".system.ModifiedApplication"
+        android:process="com.kaelesty.client"
+        android:name="com.kaelesty.client.system.ModifiedApplication"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -18,12 +19,12 @@
         android:theme="@style/Theme.Ntitestchrome_scaner"
         tools:targetApi="31">
         <service
-            android:name=".presentation.main.ClientService"
+            android:name="com.kaelesty.client.presentation.main.ClientService"
             android:enabled="true"
             android:foregroundServiceType="dataSync"
             android:exported="true"/>
         <activity
-            android:name=".presentation.main.MainActivity"
+            android:name="com.kaelesty.client.presentation.main.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Ntitestchrome_scaner">
             <intent-filter>

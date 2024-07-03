@@ -16,12 +16,7 @@ object ExecTool {
 		}
 	}
 
-	fun execWithNonsplittedReturn(command: String): String {
-		RUNTIME.exec(command).also {
-			it.waitFor()
-			return it.inputStream
-				.readBytes()
-				.toString()
-		}
+	fun execProcessed(command: String): Process {
+		return RUNTIME.exec(command)
 	}
 }
