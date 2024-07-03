@@ -6,18 +6,16 @@ import com.kaelesty.server.data.logs.LogsTool
 import com.kaelesty.server.data.scanner.FilesTool.HOME_DIR
 import com.kaelesty.server.domain.scanner.ScannerRepo
 import com.kaelesty.shared.domain.Scan
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import com.kaelesty.shared.domain.millisToDate
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ScannerRepoImpl @Inject constructor(
 	private val scanDao: ScanDao,
+
 ): ScannerRepo {
 
 	override suspend fun makeScan(): Scan? {
@@ -62,16 +60,25 @@ class ScannerRepoImpl @Inject constructor(
 		}
 	}
 
-	suspend fun getScansStatic(): List<Scan> {
+	fun getScansStatic(): List<Scan> {
 		return scanDao.getScansStatic().map {
 			FilesTool.getScan(it.metaFilePath)
 		}
 	}
 
-	override suspend fun restoreFileSystemByScan(scanId: Int) {
+	override suspend fun restoreFileSystemByScan(
+		scanId: Int,
+		onStart: () -> Unit,
+		onFinish: () -> Unit,
+	) {
+		onStart()
+		val startTime = System.currentTimeMillis()
 		val archivePath = scanDao.getScanById(scanId).archiveFilePath
 		val process = FilesTool.restoreFileSystem(archivePath)
 		process.waitFor()
 		LogsTool.log("File system restored by scan with id $scanId")
+		LogsTool.log("Started at ${startTime.millisToDate()}")
+		LogsTool.log("Time spent: ${(System.currentTimeMillis() - startTime) / 1000} sec")
+		onFinish()
 	}
 }

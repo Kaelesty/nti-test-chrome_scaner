@@ -167,7 +167,7 @@ fun NodeVisualization(
 fun getColorByNodeType(
 	type: Scan.Node.NodeType
 ) = when (type) {
-	Scan.Node.NodeType.NEW -> Color.hsl(143F, 96F, 10F)
+	Scan.Node.NodeType.NEW -> Color(27, 102, 62)
 	Scan.Node.NodeType.MODIFIED -> Color.Magenta
 	Scan.Node.NodeType.DEFAULT -> Color.Black
 }

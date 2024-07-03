@@ -10,7 +10,6 @@ import java.time.format.DateTimeFormatter
 object ScanTool {
 
 	const val CHROME_DIR = FilesTool.CHROME_DIR
-	const val HOME_DIR = FilesTool.HOME_DIR
 
 	fun makeScan(lastScan: Scan?): Scan {
 		val scan = Scan(
@@ -66,10 +65,6 @@ object ScanTool {
 		lastScanNode: Scan.Node?,
 		parentPath: String
 	): Scan.Node {
-		// -rw------- 1 u0_a107 u0_a107 322436 2024-06-30 13:52 0
-		// -rw------- 1 u0_a107 u0_a107  14820 2024-06-30 13:52 0.jpeg
-		// drwx------ 26 u0_a107 u0_a107       4096 2024-07-01 07:39 app_chrome/
-		// drwxrws--x 10 u0_a107 u0_a107_cache 4096 2024-07-01 07:39 cache/
 		val fileMeta = lsOutputToFileMeta(output)
 		return if (fileMeta.name.endsWith("/")) { // is dir
 			Scan.Node.DirectoryNode(

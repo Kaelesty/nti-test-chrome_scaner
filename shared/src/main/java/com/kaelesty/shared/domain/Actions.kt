@@ -47,4 +47,10 @@ sealed interface ServerAction {
 	data class NewScan(
 		val scan: Scan
 	): ServerAction
+
+	@Serializable
+	object RestoringStarted: ServerAction
+
+	@Serializable
+	object RestoringFinished: ServerAction
 }

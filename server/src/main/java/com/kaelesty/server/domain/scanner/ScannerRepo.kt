@@ -9,5 +9,9 @@ interface ScannerRepo {
 
 	fun getScans(): Flow<List<Scan>>
 
-	suspend fun restoreFileSystemByScan(scanId: Int)
+	suspend fun restoreFileSystemByScan(
+		scanId: Int,
+		onStart: () -> Unit,
+		onFinish: () -> Unit,
+	)
 }

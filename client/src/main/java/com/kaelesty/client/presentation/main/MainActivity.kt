@@ -5,8 +5,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.datastore.preferences.preferencesDataStore
+import com.kaelesty.client.domain.uilock.UiLock
 import com.kaelesty.client.presentation.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 val Context.dataStore by preferencesDataStore(
 	name = "preferences"
@@ -14,6 +16,8 @@ val Context.dataStore by preferencesDataStore(
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+	@Inject lateinit var uiLock: UiLock
 
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,7 +27,9 @@ class MainActivity : ComponentActivity() {
 
 		setContent {
 			AppTheme {
-				MainScreen()
+				MainScreen(
+					uiLockedFlow = uiLock.stateFlow,
+				)
 			}
 		}
 	}

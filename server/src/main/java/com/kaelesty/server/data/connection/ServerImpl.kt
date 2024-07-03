@@ -4,7 +4,6 @@ import android.util.Log
 import com.kaelesty.server.data.scanner.PeriodicalScanner
 import com.kaelesty.server.data.scanner.ScannerRepoImpl
 import com.kaelesty.server.domain.connection.Server
-import com.kaelesty.server.domain.scanner.ScannerRepo
 import com.kaelesty.shared.domain.ClientAction
 import com.kaelesty.shared.domain.ServerAction
 import kotlinx.coroutines.CoroutineScope
@@ -15,7 +14,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -81,7 +79,11 @@ class ServerImpl @Inject constructor(
 
 			is ClientAction.RestoreScan -> {
 				scope.launch {
-					scannerRepo.restoreFileSystemByScan(action.scanId)
+					scannerRepo.restoreFileSystemByScan(
+						action.scanId,
+						onStart = { executeAction(ServerAction.RestoringStarted) },
+						onFinish = { executeAction(ServerAction.RestoringFinished) }
+					)
 				}
 			}
 		}

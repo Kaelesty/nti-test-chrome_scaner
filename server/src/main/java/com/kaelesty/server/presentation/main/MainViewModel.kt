@@ -4,9 +4,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kaelesty.server.data.logs.LogsTool
-import com.kaelesty.server.domain.connection.ConnectionRepo
+import com.kaelesty.server.domain.connection.GetServerPortUseCase
+import com.kaelesty.server.domain.connection.SaveServerPortUseCase
 import com.kaelesty.server.domain.connection.Server
-import com.kaelesty.server.domain.scanner.ScannerRepo
 import com.kaelesty.shared.domain.MemoryUsage
 import com.kaelesty.shared.domain.ServerAction
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,12 +19,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-	private val scannerRepo: ScannerRepo,
-	private val connectionRepo: ConnectionRepo,
+	private val getServerPortUseCase: GetServerPortUseCase,
+	private val saveServerPortUseCase: SaveServerPortUseCase,
 	private val server: Server,
 ): ViewModel() {
 
-	val MEMORY_USAGE_OBSERVATION_DELAY_MILLIS = 10000L // TODO set to 100
+	val MEMORY_USAGE_OBSERVATION_DELAY_MILLIS = 100L
 
 	data class State(
 		val port: String = "",
@@ -69,7 +69,7 @@ class MainViewModel @Inject constructor(
 		viewModelScope.launch(Dispatchers.IO) {
 			val port = _state.value.editablePort
 			if (validatePort(port)) {
-				connectionRepo.saveServerPort(port)
+				saveServerPortUseCase(port)
 			}
 			else {
 				_state.emit(
@@ -93,7 +93,7 @@ class MainViewModel @Inject constructor(
 
 	private fun collectCurrentServerPort() {
 		viewModelScope.launch(Dispatchers.IO) {
-			connectionRepo.getServerPort().collect {
+			getServerPortUseCase().collect {
 				it?.let {
 					_state.emit(
 						_state.value.copy(

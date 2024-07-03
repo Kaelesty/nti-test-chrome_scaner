@@ -3,6 +3,7 @@ package com.kaelesty.client.data.client
 import android.util.Log
 import com.kaelesty.client.data.memoryusage.ServerStateRepoImpl
 import com.kaelesty.client.data.scanlist.ScanListRepoImpl
+import com.kaelesty.client.data.uilock.UiLockTool
 import com.kaelesty.client.domain.client.Client
 import com.kaelesty.shared.domain.ClientAction
 import com.kaelesty.shared.domain.ServerAction
@@ -49,6 +50,18 @@ object ClientImpl: Client {
 
 			is ServerAction.SetScanList -> {
 				ScanListRepoImpl.setScanList(action.scans)
+			}
+
+			is ServerAction.RestoringStarted -> {
+				scope.launch {
+					UiLockTool.setUiLockState(true)
+				}
+			}
+
+			is ServerAction.RestoringFinished -> {
+				scope.launch {
+					UiLockTool.setUiLockState(false)
+				}
 			}
 		}
 	}
