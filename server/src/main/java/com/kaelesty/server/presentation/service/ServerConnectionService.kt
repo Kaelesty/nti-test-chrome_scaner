@@ -32,6 +32,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.SharingStarted
@@ -85,6 +86,12 @@ class ServerConnectionService : Service() {
 				}
 			}
 		}
+	}
+
+	override fun onDestroy() {
+		super.onDestroy()
+		serverScope.cancel()
+		scope.cancel()
 	}
 
 	private fun startServer() {

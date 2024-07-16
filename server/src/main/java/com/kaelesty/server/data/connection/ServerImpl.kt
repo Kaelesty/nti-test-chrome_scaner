@@ -1,6 +1,7 @@
 package com.kaelesty.server.data.connection
 
 import android.util.Log
+import com.kaelesty.server.data.logs.LogsTool
 import com.kaelesty.server.data.scanner.PeriodicalScanner
 import com.kaelesty.server.data.scanner.ScannerRepoImpl
 import com.kaelesty.server.domain.connection.Server

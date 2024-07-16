@@ -17,7 +17,9 @@
             android:name=".presentation.service.ServerConnectionService"
             android:enabled="true"
             android:foregroundServiceType="dataSync"
-            android:exported="true"/>
+            android:exported="true"
+            android:stopWithTask="true"
+            />
 
         <activity
             android:name=".presentation.main.MainActivity"

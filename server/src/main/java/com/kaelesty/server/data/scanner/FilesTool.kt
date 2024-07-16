@@ -11,13 +11,13 @@ object FilesTool {
 	const val HOME_DIR = "/data/data/com.kaelesty.server"
 
 	fun saveFileSystem(scanId: Int, path: String): Process {
-		return ExecTool.execProcessed("su -c tar -cvf $path $CHROME_DIR")
+		return ExecTool.execProcessed("su -c nice tar -cf $path $CHROME_DIR")
 	}
 
 	fun restoreFileSystem(archivePath: String): Process {
 		ProcessTool.killChrome()
 		clearFileSystem()
-		return ExecTool.execProcessed("su -c tar -xvf $archivePath -C /")
+		return ExecTool.execProcessed("su -c nice tar -xf $archivePath -C /")
 	}
 
 	fun saveScan(scan: Scan, path: String) {

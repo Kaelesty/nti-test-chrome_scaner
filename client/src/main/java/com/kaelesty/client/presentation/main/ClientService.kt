@@ -21,6 +21,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -84,6 +85,12 @@ class ClientService : Service() {
 
 	override fun onBind(intent: Intent): IBinder? {
 		return null
+	}
+
+	override fun onDestroy() {
+		super.onDestroy()
+		scope.cancel()
+		serverScope.cancel()
 	}
 
 	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

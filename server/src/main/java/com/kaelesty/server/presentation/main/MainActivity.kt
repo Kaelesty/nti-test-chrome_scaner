@@ -20,6 +20,9 @@ class MainActivity : ComponentActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
+		Runtime.getRuntime().exec("su")
+		// request superuser permission on app startup
+
 		startConnectionService()
 
 		setContent {

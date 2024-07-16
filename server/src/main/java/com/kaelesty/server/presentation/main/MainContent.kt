@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Button
@@ -32,8 +34,12 @@ fun MainContent() {
 	val viewModel = hiltViewModel<MainViewModel>()
 	val state by viewModel.state.collectAsState()
 
+	val scrollState = rememberScrollState()
+
 	Column(
-		Modifier.padding(16.dp)
+		Modifier
+			.padding(16.dp)
+			.verticalScroll(scrollState)
 	) {
 		ConnectionCard(state, viewModel)
 		Spacer(modifier = Modifier.height(6.dp))

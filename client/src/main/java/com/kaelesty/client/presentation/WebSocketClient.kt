@@ -13,6 +13,7 @@ import io.ktor.websocket.close
 import io.ktor.websocket.readText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
@@ -33,6 +34,7 @@ class WebSocketClient(
 
 	suspend fun connect(url: String) {
 		Log.d("WebSocketClient", "connecting to $url")
+		scope.coroutineContext.cancelChildren()
 		webSocketSession = httpClient.webSocketSession(url).also {
 			scope.launch {
 				_messageFlow.collect { message ->

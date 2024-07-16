@@ -22,7 +22,9 @@
             android:name="com.kaelesty.client.presentation.main.ClientService"
             android:enabled="true"
             android:foregroundServiceType="dataSync"
-            android:exported="true"/>
+            android:exported="true"
+            android:stopWithTask="true"
+            />
         <activity
             android:name="com.kaelesty.client.presentation.main.MainActivity"
             android:exported="true"

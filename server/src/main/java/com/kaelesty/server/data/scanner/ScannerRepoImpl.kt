@@ -25,7 +25,7 @@ class ScannerRepoImpl @Inject constructor(
 		val scan = ScanTool.makeScan(lastScan)
 		val equals = lastScan?.let { ScanTool.equals(scan, it) } ?: false
 		if (lastScan == null || ! equals) {
-
+			LogsTool.log("Changes detected, archiving file system")
 			val metaFilePath = "$HOME_DIR/files/scan_meta_${scan.id}.json"
 			val fileSystemFilePath = "$HOME_DIR/files/scan_${scan.id}.tar"
 
@@ -36,6 +36,7 @@ class ScannerRepoImpl @Inject constructor(
 				scan.id, fileSystemFilePath
 			)
 			process.waitFor()
+			LogsTool.log("Complete")
 			scanDao.saveScan(
 				ScanDbModel(
 					scan.id,
